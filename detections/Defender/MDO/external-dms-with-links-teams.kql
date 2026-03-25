@@ -1,0 +1,16 @@
+// External DMs with Links in Teams
+// Identify top external domains sending links in Teams over last 7 days
+// Source: https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/safeguarding-microsoft-teams-with-microsoft-defender-for-office-365/4464086
+// Improved: added Timestamp filter on MessageUrlInfo for better join performance
+// and filtered out common trusted domains to reduce noise
+let lookback = 7d;
+let trustedDomains = dynamic(["microsoft.com", "sharepoint.com", "office.com", "live.com", "windows.net", "microsoftonline.com"]);
+MessageEvents
+| where Timestamp > ago(lookback) and IsExternalThread == true
+| join kind=inner (
+    MessageUrlInfo
+    | where Timestamp > ago(lookback)
+  ) on TeamsMessageId
+| where not(UrlDomain has_any (trustedDomains))
+| summarize Links=dcount(Url), Senders=dcount(SenderEmailAddress) by UrlDomain
+| top 10 by Links desc

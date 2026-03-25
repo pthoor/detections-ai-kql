@@ -1,0 +1,10 @@
+// Malicious Verdicts in Teams
+// Find messages already carrying Spam/Phish/Malware verdicts for fastest triage queue
+// Source: https://techcommunity.microsoft.com/blog/microsoftdefenderforoffice365blog/safeguarding-microsoft-teams-with-microsoft-defender-for-office-365/4464086
+let lookback = 1d;
+MessageEvents
+| where Timestamp > ago(lookback)
+| where ThreatTypes has "Phish" or ThreatTypes has "Malware" or ThreatTypes has "Spam"
+| project Timestamp, SenderDisplayName, SenderEmailAddress,
+         RecipientDetails, IsOwnedThread, ThreadType, IsExternalThread, ReportId
+| order by Timestamp desc
