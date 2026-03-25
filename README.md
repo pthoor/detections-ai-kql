@@ -8,6 +8,7 @@ This repo is part of [detections.ai](https://detections.ai), a platform for crea
 
 ## 📁 Repo Structure
 
+```text
 detections/
 ├── EntraID/
 │
@@ -20,6 +21,7 @@ detections/
 ├── Sentinel/
 │   ├── ScheduledRules/
 │   └── HuntingQueries/
+```
 
 ## ✍️ Naming Rules
 
